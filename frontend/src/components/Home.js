@@ -202,7 +202,7 @@ const Home = ({ isAdmin }) => {
                 <Card 
                   key={movie.id} 
                   className="movie-card card-hover bg-gray-800/50 border-gray-700 group cursor-pointer"
-                  onClick={() => window.location.href = `/movies#${movie.id}`}
+                  onClick={() => setSelectedMovie(movie)}
                 >
                   <CardContent className="p-0">
                     <div className="relative">
