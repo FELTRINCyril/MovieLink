@@ -44,6 +44,7 @@ class Movie(BaseModel):
     title: str
     url: Optional[str] = None
     image: Optional[str] = None
+    image_settings: Optional[dict] = {"scale": 100, "positionX": 50, "positionY": 50}
     actors: List[str] = []  # IDs des acteurs
     description: Optional[str] = None
     genres: List[str] = []  # IDs des genres
