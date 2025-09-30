@@ -4,6 +4,7 @@ import { Play, Star, Clock, Calendar, Heart, ChevronRight, Film, Users } from 'l
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import axios from 'axios';
 import { toast } from 'sonner';
 
