@@ -57,6 +57,7 @@ class Actor(BaseModel):
     name: str
     age: Optional[int] = None
     image: Optional[str] = None
+    image_settings: Optional[dict] = {"scale": 100, "positionX": 50, "positionY": 50}
     movies: List[str] = []  # IDs des films
     description: Optional[str] = None
     genres: List[str] = []  # IDs des genres (ex: "comique", "action")
