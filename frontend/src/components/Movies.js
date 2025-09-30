@@ -287,7 +287,7 @@ const Movies = ({ isAdmin }) => {
                   <SelectValue placeholder="Tous les acteurs" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="">Tous les acteurs</SelectItem>
+                  <SelectItem value="all">Tous les acteurs</SelectItem>
                   {actors.map((actor) => (
                     <SelectItem key={actor.id} value={actor.id} className="text-white">
                       {actor.name}
@@ -305,7 +305,7 @@ const Movies = ({ isAdmin }) => {
                   <SelectValue placeholder="Tous les genres" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="">Tous les genres</SelectItem>
+                  <SelectItem value="all">Tous les genres</SelectItem>
                   {genres.map((genre) => (
                     <SelectItem key={genre.id} value={genre.id} className="text-white">
                       {genre.name}
@@ -323,7 +323,7 @@ const Movies = ({ isAdmin }) => {
                   <SelectValue placeholder="Toutes durées" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="">Toutes durées</SelectItem>
+                  <SelectItem value="all">Toutes durées</SelectItem>
                   <SelectItem value="short" className="text-white">Court (&lt; 1h30)</SelectItem>
                   <SelectItem value="medium" className="text-white">Moyen (1h30 - 2h30)</SelectItem>
                   <SelectItem value="long" className="text-white">Long (&gt; 2h30)</SelectItem>
