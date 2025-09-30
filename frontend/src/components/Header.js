@@ -13,6 +13,9 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
   const [searchResults, setSearchResults] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedActor, setSelectedActor] = useState(null);
+  const [actors, setActors] = useState([]);
   const location = useLocation();
 
   const handleSearch = async (query) => {
