@@ -226,22 +226,39 @@ const Movies = ({ isAdmin }) => {
   };
 
   const getImageSettings = (movieId) => {
-    return imageSettings[movieId] || { scale: 100, positionX: 50, positionY: 50 };
+    const movie = movies.find(m => m.id === movieId);
+    return movie?.image_settings || { scale: 100, positionX: 50, positionY: 50 };
   };
 
-  const updateImageSettings = (movieId, settings) => {
-    setImageSettings(prev => ({
-      ...prev,
-      [movieId]: { ...getImageSettings(movieId), ...settings }
-    }));
+  const updateImageSettings = async (movieId, settings) => {
+    const newSettings = { ...getImageSettings(movieId), ...settings };
+    
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`${API}/movies/${movieId}/image-settings`, newSettings, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Update local state
+      setMovies(prev => prev.map(movie => 
+        movie.id === movieId 
+          ? { ...movie, image_settings: newSettings }
+          : movie
+      ));
+      setFilteredMovies(prev => prev.map(movie => 
+        movie.id === movieId 
+          ? { ...movie, image_settings: newSettings }
+          : movie
+      ));
+    } catch (error) {
+      console.error('Error updating image settings:', error);
+      toast.error('Erreur lors de la sauvegarde des paramètres d\'image');
+    }
   };
 
-  const resetImageSettings = (movieId) => {
-    setImageSettings(prev => {
-      const newSettings = { ...prev };
-      delete newSettings[movieId];
-      return newSettings;
-    });
+  const resetImageSettings = async (movieId) => {
+    const defaultSettings = { scale: 100, positionX: 50, positionY: 50 };
+    await updateImageSettings(movieId, defaultSettings);
   };
 
   if (loading) {
