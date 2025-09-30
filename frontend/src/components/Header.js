@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Film, Users, Crown, LogOut, Menu, X } from 'lucide-react';
+import { Search, Film, Users, Crown, LogOut, Menu, X, Heart, Tag } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import axios from 'axios';
