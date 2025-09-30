@@ -203,8 +203,32 @@ async def create_movie(movie: MovieCreate, current_user: User = Depends(get_curr
 
 @api_router.put("/movies/{movie_id}", response_model=Movie)
 async def update_movie(movie_id: str, movie: MovieCreate, current_user: User = Depends(get_current_user)):
+    # Récupérer l'ancien film pour gérer les liaisons
+    old_movie = await db.movies.find_one({"id": movie_id})
+    if not old_movie:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    
     movie_data = prepare_for_mongo(movie.dict())
     await db.movies.update_one({"id": movie_id}, {"$set": movie_data})
+    
+    # Gérer les liaisons bidirectionnelles
+    old_actors = set(old_movie.get("actors", []))
+    new_actors = set(movie.actors)
+    
+    # Retirer le film des acteurs qui ne sont plus liés
+    for actor_id in old_actors - new_actors:
+        await db.actors.update_one(
+            {"id": actor_id}, 
+            {"$pull": {"movies": movie_id}}
+        )
+    
+    # Ajouter le film aux nouveaux acteurs
+    for actor_id in new_actors - old_actors:
+        await db.actors.update_one(
+            {"id": actor_id}, 
+            {"$addToSet": {"movies": movie_id}}
+        )
+    
     updated_movie = await db.movies.find_one({"id": movie_id})
     if updated_movie:
         return Movie(**updated_movie)
