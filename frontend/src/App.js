@@ -8,6 +8,8 @@ import Header from './components/Header';
 import Home from './components/Home';
 import Movies from './components/Movies';
 import Actors from './components/Actors';
+import Favorites from './components/Favorites';
+import Genres from './components/Genres';
 import Login from './components/Login';
 import { Toaster } from './components/ui/sonner';
 
