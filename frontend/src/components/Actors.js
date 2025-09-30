@@ -81,7 +81,7 @@ const Actors = ({ isAdmin }) => {
     }
 
     // Age filter
-    if (selectedAgeRange) {
+    if (selectedAgeRange && selectedAgeRange !== 'all') {
       filtered = filtered.filter(actor => {
         const age = actor.age || 0;
         switch (selectedAgeRange) {
@@ -94,7 +94,7 @@ const Actors = ({ isAdmin }) => {
     }
 
     // Movie count filter
-    if (selectedMovieCount) {
+    if (selectedMovieCount && selectedMovieCount !== 'all') {
       filtered = filtered.filter(actor => {
         const movieCount = actor.movies?.length || 0;
         switch (selectedMovieCount) {
