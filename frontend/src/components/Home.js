@@ -194,7 +194,11 @@ const Home = ({ isAdmin }) => {
             
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {recentMovies.map((movie) => (
-                <Card key={movie.id} className="movie-card card-hover bg-gray-800/50 border-gray-700 group">
+                <Card 
+                  key={movie.id} 
+                  className="movie-card card-hover bg-gray-800/50 border-gray-700 group cursor-pointer"
+                  onClick={() => window.location.href = `/movies#${movie.id}`}
+                >
                   <CardContent className="p-0">
                     <div className="relative">
                       {movie.image ? (
