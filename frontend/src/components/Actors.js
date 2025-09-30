@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Heart, Edit, Trash2, Users as UsersIcon, Film } from 'lucide-react';
+import { Plus, Search, Filter, Heart, Edit, Trash2, Users as UsersIcon, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
-import { Checkbox } from './ui/checkbox';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -36,6 +35,8 @@ const Actors = ({ isAdmin }) => {
     description: '',
     genres: []
   });
+
+  const [imageSettings, setImageSettings] = useState({});
 
   useEffect(() => {
     loadData();
@@ -214,22 +215,41 @@ const Actors = ({ isAdmin }) => {
     setSelectedMovieCount('all');
   };
 
+  const getImageSettings = (actorId) => {
+    return imageSettings[actorId] || { scale: 100, positionX: 50, positionY: 50 };
+  };
+
+  const updateImageSettings = (actorId, settings) => {
+    setImageSettings(prev => ({
+      ...prev,
+      [actorId]: { ...getImageSettings(actorId), ...settings }
+    }));
+  };
+
+  const resetImageSettings = (actorId) => {
+    setImageSettings(prev => {
+      const newSettings = { ...prev };
+      delete newSettings[actorId];
+      return newSettings;
+    });
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-violet-600 border-t-transparent"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-violet-500 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 bg-gray-900">
       <div className="container mx-auto">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold gradient-text mb-2">Acteurs</h1>
-            <p className="text-gray-400">{filteredActors.length} acteur{filteredActors.length !== 1 ? 's' : ''} trouvé{filteredActors.length !== 1 ? 's' : ''}</p>
+            <p className="text-gray-300">{filteredActors.length} acteur{filteredActors.length !== 1 ? 's' : ''} trouvé{filteredActors.length !== 1 ? 's' : ''}</p>
           </div>
           
           {isAdmin && (
@@ -249,11 +269,11 @@ const Actors = ({ isAdmin }) => {
         </div>
 
         {/* Search and Filters */}
-        <div className="glass rounded-lg p-6 mb-8">
+        <div className="glass rounded-lg p-6 mb-8 bg-gray-800/60 border border-gray-600">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div className="lg:col-span-2">
-              <Label htmlFor="actor-search" className="text-gray-300 mb-2 block">
+              <Label htmlFor="actor-search" className="text-gray-200 mb-2 block font-medium">
                 Rechercher un acteur
               </Label>
               <div className="relative">
@@ -265,39 +285,39 @@ const Actors = ({ isAdmin }) => {
                   placeholder="Nom, description, film..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder-gray-400"
+                  className="pl-10 bg-gray-700/80 border-gray-600 text-white placeholder-gray-400 focus:border-violet-400"
                 />
               </div>
             </div>
 
             {/* Age Filter */}
             <div>
-              <Label className="text-gray-300 mb-2 block">Âge</Label>
+              <Label className="text-gray-200 mb-2 block font-medium">Âge</Label>
               <Select value={selectedAgeRange} onValueChange={setSelectedAgeRange}>
-                <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
+                <SelectTrigger className="bg-gray-700/80 border-gray-600 text-white">
                   <SelectValue placeholder="Tous les âges" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
+                <SelectContent className="bg-gray-800 border-gray-600">
                   <SelectItem value="all">Tous les âges</SelectItem>
-                  <SelectItem value="young" className="text-white">Jeune (&lt; 30 ans)</SelectItem>
-                  <SelectItem value="middle" className="text-white">Moyen (30-50 ans)</SelectItem>
-                  <SelectItem value="mature" className="text-white">Mature (&gt; 50 ans)</SelectItem>
+                  <SelectItem value="young" className="text-white hover:bg-gray-700">Jeune (&lt; 30 ans)</SelectItem>
+                  <SelectItem value="middle" className="text-white hover:bg-gray-700">Moyen (30-50 ans)</SelectItem>
+                  <SelectItem value="mature" className="text-white hover:bg-gray-700">Mature (&gt; 50 ans)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Movie Count Filter */}
             <div>
-              <Label className="text-gray-300 mb-2 block">Nombre de films</Label>
+              <Label className="text-gray-200 mb-2 block font-medium">Nombre de films</Label>
               <Select value={selectedMovieCount} onValueChange={setSelectedMovieCount}>
-                <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
+                <SelectTrigger className="bg-gray-700/80 border-gray-600 text-white">
                   <SelectValue placeholder="Tous" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
+                <SelectContent className="bg-gray-800 border-gray-600">
                   <SelectItem value="all">Tous</SelectItem>
-                  <SelectItem value="few" className="text-white">Peu (≤ 2 films)</SelectItem>
-                  <SelectItem value="moderate" className="text-white">Modéré (3-5 films)</SelectItem>
-                  <SelectItem value="many" className="text-white">Beaucoup (&gt; 5 films)</SelectItem>
+                  <SelectItem value="few" className="text-white hover:bg-gray-700">Peu (≤ 2 films)</SelectItem>
+                  <SelectItem value="moderate" className="text-white hover:bg-gray-700">Modéré (3-5 films)</SelectItem>
+                  <SelectItem value="many" className="text-white hover:bg-gray-700">Beaucoup (&gt; 5 films)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -310,7 +330,7 @@ const Actors = ({ isAdmin }) => {
                 variant="outline"
                 size="sm"
                 onClick={clearFilters}
-                className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                className="border-gray-500 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 <Filter className="w-4 h-4 mr-2" />
                 Effacer les filtres
@@ -322,9 +342,9 @@ const Actors = ({ isAdmin }) => {
         {/* Actors Grid */}
         {filteredActors.length === 0 ? (
           <div className="text-center py-16">
-            <UsersIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">Aucun acteur trouvé</h3>
-            <p className="text-gray-600 mb-6">
+            <UsersIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-300 mb-2">Aucun acteur trouvé</h3>
+            <p className="text-gray-500 mb-6">
               {actors.length === 0 
                 ? "Aucun acteur n'a été ajouté pour le moment"
                 : "Aucun acteur ne correspond à vos critères de recherche"
@@ -345,121 +365,205 @@ const Actors = ({ isAdmin }) => {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {filteredActors.map((actor) => (
-              <Card 
-                key={actor.id} 
-                className="actor-card card-hover bg-gray-800/50 border-gray-700 group cursor-pointer"
-                onClick={() => setSelectedActor(actor)}
-              >
-                <CardContent className="p-0">
-                  <div className="relative aspect-[3/4]">
-                    {actor.image ? (
-                      <img 
-                        src={actor.image} 
-                        alt={actor.name}
-                        className="w-full h-full object-cover rounded-t-lg"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-700 flex items-center justify-center rounded-t-lg">
-                        <UsersIcon className="w-12 h-12 text-gray-500" />
+            {filteredActors.map((actor) => {
+              const settings = getImageSettings(actor.id);
+              return (
+                <Card 
+                  key={actor.id} 
+                  className="actor-card card-hover bg-gray-800/60 border-gray-600 group cursor-pointer overflow-hidden"
+                  onClick={() => setSelectedActor(actor)}
+                >
+                  <CardContent className="p-0">
+                    <div className="relative aspect-[3/4] overflow-hidden">
+                      {actor.image ? (
+                        <div className="w-full h-full relative">
+                          <img 
+                            src={actor.image} 
+                            alt={actor.name}
+                            className="w-full h-full object-cover transition-transform duration-300"
+                            style={{
+                              transform: `scale(${settings.scale / 100})`,
+                              objectPosition: `${settings.positionX}% ${settings.positionY}%`
+                            }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                          <div className="w-full h-full bg-gray-700 hidden items-center justify-center">
+                            <UsersIcon className="w-12 h-12 text-gray-500" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <UsersIcon className="w-12 h-12 text-gray-500" />
+                        </div>
+                      )}
+                      
+                      {/* Favorite Heart */}
+                      {actor.is_favorite && (
+                        <div className="absolute top-2 right-2">
+                          <Heart className="w-5 h-5 text-red-500 fill-current" />
+                        </div>
+                      )}
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="border-white/30 text-white hover:bg-red-500/80 hover:border-red-500"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite(actor.id, actor.is_favorite);
+                          }}
+                        >
+                          <Heart className={`w-4 h-4 ${actor.is_favorite ? 'fill-current text-red-500' : ''}`} />
+                        </Button>
                       </div>
-                    )}
-                    
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-t-lg">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="border-white/30 text-white hover:bg-white/20"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(actor.id, actor.is_favorite);
-                        }}
-                      >
-                        <Heart className={`w-4 h-4 ${actor.is_favorite ? 'fill-current text-red-500' : ''}`} />
-                      </Button>
+                      
+                      {/* Admin Controls */}
+                      {isAdmin && (
+                        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="border-white/30 text-white hover:bg-blue-500/80 p-1 h-6 w-6"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openEditDialog(actor);
+                              }}
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="border-red-500/30 text-red-400 hover:bg-red-500/80 p-1 h-6 w-6"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteActor(actor.id);
+                              }}
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Image Controls */}
+                      {isAdmin && actor.image && (
+                        <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="bg-black/80 rounded-lg p-2 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-white">Zoom:</span>
+                              <div className="flex items-center gap-1">
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="p-1 h-6 w-6 text-white hover:bg-white/20"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateImageSettings(actor.id, { scale: Math.max(50, settings.scale - 10) });
+                                  }}
+                                >
+                                  <ZoomOut className="w-3 h-3" />
+                                </Button>
+                                <span className="text-xs text-white min-w-[30px] text-center">{settings.scale}%</span>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="p-1 h-6 w-6 text-white hover:bg-white/20"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateImageSettings(actor.id, { scale: Math.min(200, settings.scale + 10) });
+                                  }}
+                                >
+                                  <ZoomIn className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between gap-1">
+                              <div className="flex items-center gap-1">
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="p-1 h-5 w-5 text-white hover:bg-white/20"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateImageSettings(actor.id, { positionX: Math.max(0, settings.positionX - 10) });
+                                  }}
+                                >
+                                  ←
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="p-1 h-5 w-5 text-white hover:bg-white/20"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateImageSettings(actor.id, { positionX: Math.min(100, settings.positionX + 10) });
+                                  }}
+                                >
+                                  →
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="p-1 h-5 w-5 text-white hover:bg-white/20"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateImageSettings(actor.id, { positionY: Math.max(0, settings.positionY - 10) });
+                                  }}
+                                >
+                                  ↑
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="p-1 h-5 w-5 text-white hover:bg-white/20"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateImageSettings(actor.id, { positionY: Math.min(100, settings.positionY + 10) });
+                                  }}
+                                >
+                                  ↓
+                                </Button>
+                              </div>
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                className="p-1 h-5 w-5 text-white hover:bg-white/20"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  resetImageSettings(actor.id);
+                                }}
+                              >
+                                <RotateCcw className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
-                    {actor.is_favorite && (
-                      <div className="absolute top-2 right-2">
-                        <Heart className="w-5 h-5 text-red-500 fill-current" />
-                      </div>
-                    )}
-                    
-                    {/* Admin Controls */}
-                    {isAdmin && (
-                      <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex items-center gap-1">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="border-white/30 text-white hover:bg-white/20 p-1 h-6 w-6"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openEditDialog(actor);
-                            }}
-                          >
-                            <Edit className="w-3 h-3" />
-                          </Button>
-                          
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="border-red-500/30 text-red-400 hover:bg-red-500/20 p-1 h-6 w-6"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteActor(actor.id);
-                            }}
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="p-3">
-                    <h3 className="font-semibold text-white text-sm mb-1 line-clamp-1">{actor.name}</h3>
-                    
-                    {actor.age && (
-                      <p className="text-xs text-gray-400 mb-1">{actor.age} ans</p>
-                    )}
-                    
-                    <p className="text-xs text-gray-500">
-                      {actor.movies?.length || 0} film{(actor.movies?.length || 0) !== 1 ? 's' : ''}
-                    </p>
-                    
-                    {/* Genres */}
-                    {actor.genres.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {actor.genres.slice(0, 1).map((genreId) => (
-                          <Badge key={genreId} variant="secondary" className="text-xs bg-violet-600/20 text-violet-300">
-                            {getGenreName(genreId)}
-                          </Badge>
-                        ))}
-                        {actor.genres.length > 1 && (
-                          <Badge variant="secondary" className="text-xs bg-gray-600/20 text-gray-400">
-                            +{actor.genres.length - 1}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="p-3 bg-gray-800">
+                      <h3 className="font-semibold text-white text-sm line-clamp-1 leading-tight">{actor.name}</h3>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
 
         {/* Add/Edit Actor Dialog */}
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-          <DialogContent className="max-w-2xl bg-gray-800 border-gray-700 max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl bg-gray-800 border-gray-600 max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-white">
+              <DialogTitle className="text-white text-xl">
                 {editingActor ? 'Modifier l\'acteur' : 'Ajouter un nouvel acteur'}
               </DialogTitle>
             </DialogHeader>
@@ -467,100 +571,136 @@ const Actors = ({ isAdmin }) => {
             <form onSubmit={handleAddActor} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name" className="text-gray-300">Nom *</Label>
+                  <Label htmlFor="name" className="text-gray-200 font-medium">Nom *</Label>
                   <Input
                     id="name"
                     data-testid="actor-name-input"
                     type="text"
                     value={newActor.name}
                     onChange={(e) => setNewActor({...newActor, name: e.target.value})}
-                    className="bg-gray-700 border-gray-600 text-white"
+                    className="bg-gray-700 border-gray-600 text-white focus:border-violet-400"
                     required
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="age" className="text-gray-300">Âge</Label>
+                  <Label htmlFor="age" className="text-gray-200 font-medium">Âge</Label>
                   <Input
                     id="age"
                     type="number"
                     value={newActor.age}
                     onChange={(e) => setNewActor({...newActor, age: e.target.value})}
-                    className="bg-gray-700 border-gray-600 text-white"
+                    className="bg-gray-700 border-gray-600 text-white focus:border-violet-400"
                   />
                 </div>
               </div>
               
               <div>
-                <Label htmlFor="image" className="text-gray-300">Image (URL de la photo)</Label>
+                <Label htmlFor="image" className="text-gray-200 font-medium">Image (URL de la photo)</Label>
                 <Input
                   id="image"
                   type="url"
                   value={newActor.image}
                   onChange={(e) => setNewActor({...newActor, image: e.target.value})}
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className="bg-gray-700 border-gray-600 text-white focus:border-violet-400"
                   placeholder="https://..."
                 />
               </div>
               
               <div>
-                <Label htmlFor="description" className="text-gray-300">Description</Label>
+                <Label htmlFor="description" className="text-gray-200 font-medium">Description</Label>
                 <Textarea
                   id="description"
                   value={newActor.description}
                   onChange={(e) => setNewActor({...newActor, description: e.target.value})}
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className="bg-gray-700 border-gray-600 text-white focus:border-violet-400"
                   rows={3}
                 />
               </div>
               
-              {/* Genres Selection */}
+              {/* Genres Selection - Multiple Select */}
               <div>
-                <Label className="text-gray-300">Genres</Label>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  {genres.map((genre) => (
-                    <div key={genre.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`genre-${genre.id}`}
-                        checked={newActor.genres.includes(genre.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setNewActor({...newActor, genres: [...newActor.genres, genre.id]});
-                          } else {
-                            setNewActor({...newActor, genres: newActor.genres.filter(g => g !== genre.id)});
-                          }
-                        }}
-                      />
-                      <Label htmlFor={`genre-${genre.id}`} className="text-gray-300 text-sm">
-                        {genre.name}
-                      </Label>
+                <Label className="text-gray-200 font-medium">Genres</Label>
+                <div className="space-y-2 mt-2">
+                  {newActor.genres.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {newActor.genres.map((genreId) => {
+                        const genre = genres.find(g => g.id === genreId);
+                        return genre ? (
+                          <Badge 
+                            key={genreId} 
+                            variant="secondary" 
+                            className="bg-violet-600/20 text-violet-300 cursor-pointer hover:bg-red-500/20 hover:text-red-300"
+                            onClick={() => setNewActor({...newActor, genres: newActor.genres.filter(g => g !== genreId)})}
+                          >
+                            {genre.name} ×
+                          </Badge>
+                        ) : null;
+                      })}
                     </div>
-                  ))}
+                  )}
+                  <Select 
+                    value="" 
+                    onValueChange={(value) => {
+                      if (value && !newActor.genres.includes(value)) {
+                        setNewActor({...newActor, genres: [...newActor.genres, value]});
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue placeholder="Sélectionner un genre" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-600">
+                      {genres.filter(genre => !newActor.genres.includes(genre.id)).map((genre) => (
+                        <SelectItem key={genre.id} value={genre.id} className="text-white hover:bg-gray-700">
+                          {genre.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               
-              {/* Movies Selection */}
+              {/* Movies Selection - Multiple Select */}
               <div>
-                <Label className="text-gray-300">Films</Label>
-                <div className="grid grid-cols-1 gap-2 mt-2 max-h-40 overflow-y-auto">
-                  {movies.map((movie) => (
-                    <div key={movie.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`movie-${movie.id}`}
-                        checked={newActor.movies.includes(movie.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setNewActor({...newActor, movies: [...newActor.movies, movie.id]});
-                          } else {
-                            setNewActor({...newActor, movies: newActor.movies.filter(m => m !== movie.id)});
-                          }
-                        }}
-                      />
-                      <Label htmlFor={`movie-${movie.id}`} className="text-gray-300 text-sm">
-                        {movie.title}
-                      </Label>
+                <Label className="text-gray-200 font-medium">Films</Label>
+                <div className="space-y-2 mt-2">
+                  {newActor.movies.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {newActor.movies.map((movieId) => {
+                        const movie = movies.find(m => m.id === movieId);
+                        return movie ? (
+                          <Badge 
+                            key={movieId} 
+                            variant="secondary" 
+                            className="bg-blue-600/20 text-blue-300 cursor-pointer hover:bg-red-500/20 hover:text-red-300"
+                            onClick={() => setNewActor({...newActor, movies: newActor.movies.filter(m => m !== movieId)})}
+                          >
+                            {movie.title} ×
+                          </Badge>
+                        ) : null;
+                      })}
                     </div>
-                  ))}
+                  )}
+                  <Select 
+                    value="" 
+                    onValueChange={(value) => {
+                      if (value && !newActor.movies.includes(value)) {
+                        setNewActor({...newActor, movies: [...newActor.movies, value]});
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue placeholder="Sélectionner un film" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-600">
+                      {movies.filter(movie => !newActor.movies.includes(movie.id)).map((movie) => (
+                        <SelectItem key={movie.id} value={movie.id} className="text-white hover:bg-gray-700">
+                          {movie.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               
@@ -569,7 +709,7 @@ const Actors = ({ isAdmin }) => {
                   type="button"
                   variant="outline"
                   onClick={() => setShowAddDialog(false)}
-                  className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                  className="border-gray-500 text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
                   Annuler
                 </Button>
@@ -587,7 +727,7 @@ const Actors = ({ isAdmin }) => {
         {/* Actor Detail Dialog */}
         {selectedActor && (
           <Dialog open={!!selectedActor} onOpenChange={() => setSelectedActor(null)}>
-            <DialogContent className="max-w-4xl bg-gray-800 border-gray-700 max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-4xl bg-gray-800 border-gray-600 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold text-white">{selectedActor.name}</DialogTitle>
               </DialogHeader>
@@ -609,14 +749,14 @@ const Actors = ({ isAdmin }) => {
                 
                 <div className="md:col-span-2 space-y-4">
                   {selectedActor.description && (
-                    <p className="text-gray-300 leading-relaxed">{selectedActor.description}</p>
+                    <p className="text-gray-200 leading-relaxed">{selectedActor.description}</p>
                   )}
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {selectedActor.age && (
                       <div>
                         <h4 className="font-semibold text-white mb-1">Âge</h4>
-                        <p className="text-gray-400">{selectedActor.age} ans</p>
+                        <p className="text-gray-300">{selectedActor.age} ans</p>
                       </div>
                     )}
                     
@@ -650,9 +790,9 @@ const Actors = ({ isAdmin }) => {
                                 />
                               )}
                               <div className="flex-1">
-                                <span className="text-gray-300 font-medium">{movie.title}</span>
+                                <span className="text-gray-200 font-medium">{movie.title}</span>
                                 {movie.duration && (
-                                  <p className="text-sm text-gray-500">{Math.floor(movie.duration / 60)}h {movie.duration % 60}m</p>
+                                  <p className="text-sm text-gray-400">{Math.floor(movie.duration / 60)}h {movie.duration % 60}m</p>
                                 )}
                               </div>
                             </div>
@@ -666,7 +806,7 @@ const Actors = ({ isAdmin }) => {
                     <Button 
                       variant="outline"
                       onClick={() => toggleFavorite(selectedActor.id, selectedActor.is_favorite)}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                      className="border-gray-500 text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       <Heart className={`w-4 h-4 mr-2 ${selectedActor.is_favorite ? 'fill-current text-red-500' : ''}`} />
                       {selectedActor.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
