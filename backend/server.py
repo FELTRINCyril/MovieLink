@@ -262,12 +262,25 @@ async def get_genres(type: Optional[str] = None):
     genres = await db.genres.find(query).to_list(100)
     return [Genre(**genre) for genre in genres]
 
-@api_router.post("/genres", response_model=Genre)
-async def create_genre(genre: GenreCreate, current_user: User = Depends(get_current_user)):
-    genre_obj = Genre(**genre.dict())
-    genre_data = prepare_for_mongo(genre_obj.dict())
-    await db.genres.insert_one(genre_data)
-    return genre_obj
+@api_router.delete("/genres/{genre_id}")
+async def delete_genre(genre_id: str, current_user: User = Depends(get_current_user)):
+    result = await db.genres.delete_one({"id": genre_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Genre not found")
+    return {"message": "Genre deleted"}
+
+# Favorites endpoints
+@api_router.get("/favorites")
+async def get_favorites():
+    favorites = {"movies": [], "actors": []}
+    
+    favorite_movies = await db.movies.find({"is_favorite": True}).to_list(100)
+    favorites["movies"] = [Movie(**movie) for movie in favorite_movies]
+    
+    favorite_actors = await db.actors.find({"is_favorite": True}).to_list(100)
+    favorites["actors"] = [Actor(**actor) for actor in favorite_actors]
+    
+    return favorites
 
 # Search endpoint
 @api_router.get("/search")
