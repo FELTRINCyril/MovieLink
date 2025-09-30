@@ -146,11 +146,13 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
                   <div className="p-3 border-t border-gray-700">
                     <h3 className="text-sm font-semibold text-gray-400 mb-2">Acteurs</h3>
                     {searchResults.actors.slice(0, 3).map((actor) => (
-                      <Link
+                      <div
                         key={actor.id}
-                        to="/actors"
-                        onClick={clearSearch}
-                        className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-md transition-colors"
+                        className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-md transition-colors cursor-pointer"
+                        onClick={() => {
+                          setSelectedActor(actor);
+                          clearSearch();
+                        }}
                       >
                         {actor.image && (
                           <img src={actor.image} alt={actor.name} className="w-8 h-8 object-cover rounded-full" />
