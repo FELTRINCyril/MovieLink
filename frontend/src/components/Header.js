@@ -55,6 +55,33 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
     setSearchResults(null);
   };
 
+  const formatDuration = (minutes) => {
+    if (!minutes) return 'N/A';
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}h ${mins}m`;
+  };
+
+  const getActorName = (actorId) => {
+    const actor = actors.find(a => a.id === actorId);
+    return actor?.name || 'Acteur inconnu';
+  };
+
+  const toggleFavorite = async (id, currentStatus, type) => {
+    try {
+      await axios.patch(`${API}/${type}s/${id}/favorite`);
+      // Reload search results if they're displayed
+      if (searchResults && searchQuery) {
+        handleSearch(searchQuery);
+      }
+      if (type === 'actor') {
+        loadActors();
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
   const isActive = (path) => location.pathname === path;
 
   return (
