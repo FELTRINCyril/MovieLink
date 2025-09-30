@@ -96,6 +96,8 @@ function App() {
             <Route path="/" element={<Home isAdmin={isAdmin} />} />
             <Route path="/movies" element={<Movies isAdmin={isAdmin} />} />
             <Route path="/actors" element={<Actors isAdmin={isAdmin} />} />
+            <Route path="/favorites" element={<Favorites isAdmin={isAdmin} />} />
+            <Route path="/genres" element={<Genres isAdmin={isAdmin} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
