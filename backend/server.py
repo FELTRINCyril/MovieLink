@@ -359,6 +359,17 @@ async def get_favorites():
     
     return favorites
 
+# Image settings endpoints
+@api_router.patch("/movies/{movie_id}/image-settings")
+async def update_movie_image_settings(movie_id: str, settings: dict, current_user: User = Depends(get_current_user)):
+    await db.movies.update_one({"id": movie_id}, {"$set": {"image_settings": settings}})
+    return {"message": "Image settings updated"}
+
+@api_router.patch("/actors/{actor_id}/image-settings")
+async def update_actor_image_settings(actor_id: str, settings: dict, current_user: User = Depends(get_current_user)):
+    await db.actors.update_one({"id": actor_id}, {"$set": {"image_settings": settings}})
+    return {"message": "Image settings updated"}
+
 # Search endpoint
 @api_router.get("/search")
 async def search(q: str, type: Optional[str] = None):
