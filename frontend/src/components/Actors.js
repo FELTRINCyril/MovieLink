@@ -216,22 +216,39 @@ const Actors = ({ isAdmin }) => {
   };
 
   const getImageSettings = (actorId) => {
-    return imageSettings[actorId] || { scale: 100, positionX: 50, positionY: 50 };
+    const actor = actors.find(a => a.id === actorId);
+    return actor?.image_settings || { scale: 100, positionX: 50, positionY: 50 };
   };
 
-  const updateImageSettings = (actorId, settings) => {
-    setImageSettings(prev => ({
-      ...prev,
-      [actorId]: { ...getImageSettings(actorId), ...settings }
-    }));
+  const updateImageSettings = async (actorId, settings) => {
+    const newSettings = { ...getImageSettings(actorId), ...settings };
+    
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`${API}/actors/${actorId}/image-settings`, newSettings, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Update local state
+      setActors(prev => prev.map(actor => 
+        actor.id === actorId 
+          ? { ...actor, image_settings: newSettings }
+          : actor
+      ));
+      setFilteredActors(prev => prev.map(actor => 
+        actor.id === actorId 
+          ? { ...actor, image_settings: newSettings }
+          : actor
+      ));
+    } catch (error) {
+      console.error('Error updating image settings:', error);
+      toast.error('Erreur lors de la sauvegarde des paramètres d\'image');
+    }
   };
 
-  const resetImageSettings = (actorId) => {
-    setImageSettings(prev => {
-      const newSettings = { ...prev };
-      delete newSettings[actorId];
-      return newSettings;
-    });
+  const resetImageSettings = async (actorId) => {
+    const defaultSettings = { scale: 100, positionX: 50, positionY: 50 };
+    await updateImageSettings(actorId, defaultSettings);
   };
 
   if (loading) {
