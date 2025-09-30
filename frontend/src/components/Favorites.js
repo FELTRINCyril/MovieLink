@@ -128,7 +128,7 @@ const Favorites = ({ isAdmin }) => {
                   <Card 
                     key={movie.id} 
                     className="movie-card card-hover bg-gray-800/50 border-gray-700 group cursor-pointer"
-                    onClick={() => setSelectedItem({...movie, type: 'movie'})}
+                    onClick={() => setSelectedMovie(movie)}
                   >
                     <CardContent className="p-0">
                       <div className="relative aspect-[16/9]">
