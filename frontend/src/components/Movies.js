@@ -423,26 +423,28 @@ const Movies = ({ isAdmin }) => {
                   <CardContent className="p-0">
                     <div className="relative aspect-[2/3] overflow-hidden bg-gray-700">
                       {movie.image ? (
-                        <img 
-                          src={movie.image} 
-                          alt={movie.title}
-                          className="w-full h-full object-cover transition-transform duration-300"
-                          style={{
-                            transform: `scale(${settings.scale / 100})`,
-                            objectPosition: `${settings.positionX}% ${settings.positionY}%`
-                          }}
-                          onLoad={(e) => {
-                            e.target.style.display = 'block';
-                            e.target.nextSibling.style.display = 'none';
-                          }}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div className="w-full h-full bg-gray-700 flex items-center justify-center">
-                          <FilmIcon className="w-12 h-12 text-gray-500" />
-                        </div>
+                        <>
+                          <img 
+                            src={movie.image} 
+                            alt={movie.title}
+                            className="w-full h-full object-cover transition-transform duration-300"
+                            style={{
+                              transform: `scale(${settings.scale / 100})`,
+                              objectPosition: `${settings.positionX}% ${settings.positionY}%`
+                            }}
+                            onLoad={(e) => {
+                              e.target.style.display = 'block';
+                              e.target.nextSibling.style.display = 'none';
+                            }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                          <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                            <FilmIcon className="w-12 h-12 text-gray-500" />
+                          </div>
+                        </>
                       ) : (
                         <div className="w-full h-full bg-gray-700 flex items-center justify-center">
                           <FilmIcon className="w-12 h-12 text-gray-500" />
