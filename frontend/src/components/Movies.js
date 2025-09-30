@@ -803,7 +803,7 @@ const Movies = ({ isAdmin }) => {
                       className="w-full rounded-lg"
                     />
                   ) : (
-                    <div className="w-full aspect-[2/3] bg-gray-700 flex items-center justify-center rounded-lg">
+                    <div className="w-full aspect-[16/9] bg-gray-700 flex items-center justify-center rounded-lg">
                       <FilmIcon className="w-16 h-16 text-gray-500" />
                     </div>
                   )}
