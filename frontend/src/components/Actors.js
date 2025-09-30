@@ -391,25 +391,27 @@ const Actors = ({ isAdmin }) => {
                   onClick={() => setSelectedActor(actor)}
                 >
                   <CardContent className="p-0">
-                    <div className="relative aspect-[3/4] overflow-hidden">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-gray-700">
                       {actor.image ? (
-                        <div className="w-full h-full relative">
-                          <img 
-                            src={actor.image} 
-                            alt={actor.name}
-                            className="w-full h-full object-cover transition-transform duration-300"
-                            style={{
-                              transform: `scale(${settings.scale / 100})`,
-                              objectPosition: `${settings.positionX}% ${settings.positionY}%`
-                            }}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'flex';
-                            }}
-                          />
-                          <div className="w-full h-full bg-gray-700 hidden items-center justify-center">
-                            <UsersIcon className="w-12 h-12 text-gray-500" />
-                          </div>
+                        <img 
+                          src={actor.image} 
+                          alt={actor.name}
+                          className="w-full h-full object-cover transition-transform duration-300"
+                          style={{
+                            transform: `scale(${settings.scale / 100})`,
+                            objectPosition: `${settings.positionX}% ${settings.positionY}%`
+                          }}
+                          onLoad={(e) => {
+                            e.target.style.display = 'block';
+                            e.target.nextSibling.style.display = 'none';
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                        <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <UsersIcon className="w-12 h-12 text-gray-500" />
                         </div>
                       ) : (
                         <div className="w-full h-full bg-gray-700 flex items-center justify-center">
