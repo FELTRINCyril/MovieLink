@@ -22,8 +22,8 @@ const Actors = ({ isAdmin }) => {
   const [filteredActors, setFilteredActors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAgeRange, setSelectedAgeRange] = useState('');
-  const [selectedMovieCount, setSelectedMovieCount] = useState('');
+  const [selectedAgeRange, setSelectedAgeRange] = useState('all');
+  const [selectedMovieCount, setSelectedMovieCount] = useState('all');
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingActor, setEditingActor] = useState(null);
   const [selectedActor, setSelectedActor] = useState(null);
