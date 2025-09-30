@@ -210,8 +210,8 @@ const Actors = ({ isAdmin }) => {
 
   const clearFilters = () => {
     setSearchQuery('');
-    setSelectedAgeRange('');
-    setSelectedMovieCount('');
+    setSelectedAgeRange('all');
+    setSelectedMovieCount('all');
   };
 
   if (loading) {
