@@ -229,6 +229,22 @@ async def create_actor(actor: ActorCreate, current_user: User = Depends(get_curr
     await db.actors.insert_one(actor_data)
     return actor_obj
 
+@api_router.put("/actors/{actor_id}", response_model=Actor)
+async def update_actor(actor_id: str, actor: ActorCreate, current_user: User = Depends(get_current_user)):
+    actor_data = prepare_for_mongo(actor.dict())
+    await db.actors.update_one({"id": actor_id}, {"$set": actor_data})
+    updated_actor = await db.actors.find_one({"id": actor_id})
+    if updated_actor:
+        return Actor(**updated_actor)
+    raise HTTPException(status_code=404, detail="Actor not found")
+
+@api_router.delete("/actors/{actor_id}")
+async def delete_actor(actor_id: str, current_user: User = Depends(get_current_user)):
+    result = await db.actors.delete_one({"id": actor_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Actor not found")
+    return {"message": "Actor deleted"}
+
 @api_router.patch("/actors/{actor_id}/favorite")
 async def toggle_actor_favorite(actor_id: str):
     actor = await db.actors.find_one({"id": actor_id})
