@@ -87,6 +87,16 @@ const Home = ({ isAdmin }) => {
     return `${hours}h ${mins}m`;
   };
 
+  const getActorName = (actorId) => {
+    const actor = actors.find(a => a.id === actorId);
+    return actor?.name || 'Acteur inconnu';
+  };
+
+  const getGenreName = (genreId) => {
+    const genre = genres.find(g => g.id === genreId);
+    return genre?.name || 'Genre inconnu';
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
