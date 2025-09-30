@@ -333,7 +333,7 @@ const Movies = ({ isAdmin }) => {
           </div>
           
           {/* Clear Filters */}
-          {(searchQuery || selectedActor || selectedGenre || selectedDuration) && (
+          {(searchQuery || selectedActor !== 'all' || selectedGenre !== 'all' || selectedDuration !== 'all') && (
             <div className="mt-4 flex justify-end">
               <Button
                 variant="outline"
