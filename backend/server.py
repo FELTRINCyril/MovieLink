@@ -277,8 +277,32 @@ async def create_actor(actor: ActorCreate, current_user: User = Depends(get_curr
 
 @api_router.put("/actors/{actor_id}", response_model=Actor)
 async def update_actor(actor_id: str, actor: ActorCreate, current_user: User = Depends(get_current_user)):
+    # Récupérer l'ancien acteur pour gérer les liaisons
+    old_actor = await db.actors.find_one({"id": actor_id})
+    if not old_actor:
+        raise HTTPException(status_code=404, detail="Actor not found")
+    
     actor_data = prepare_for_mongo(actor.dict())
     await db.actors.update_one({"id": actor_id}, {"$set": actor_data})
+    
+    # Gérer les liaisons bidirectionnelles
+    old_movies = set(old_actor.get("movies", []))
+    new_movies = set(actor.movies)
+    
+    # Retirer l'acteur des films qui ne sont plus liés
+    for movie_id in old_movies - new_movies:
+        await db.movies.update_one(
+            {"id": movie_id}, 
+            {"$pull": {"actors": actor_id}}
+        )
+    
+    # Ajouter l'acteur aux nouveaux films
+    for movie_id in new_movies - old_movies:
+        await db.movies.update_one(
+            {"id": movie_id}, 
+            {"$addToSet": {"actors": actor_id}}
+        )
+    
     updated_actor = await db.actors.find_one({"id": actor_id})
     if updated_actor:
         return Actor(**updated_actor)
