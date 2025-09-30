@@ -435,6 +435,105 @@ const Home = ({ isAdmin }) => {
           </div>
         </div>
       )}
+      
+      {/* Movie Detail Dialog */}
+      {selectedMovie && (
+        <Dialog open={!!selectedMovie} onOpenChange={() => setSelectedMovie(null)}>
+          <DialogContent className="max-w-4xl bg-gray-800 border-gray-600 max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-white">{selectedMovie.title}</DialogTitle>
+            </DialogHeader>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-1">
+                {selectedMovie.image ? (
+                  <img 
+                    src={selectedMovie.image} 
+                    alt={selectedMovie.title}
+                    className="w-full rounded-lg"
+                  />
+                ) : (
+                  <div className="w-full aspect-[2/3] bg-gray-700 flex items-center justify-center rounded-lg">
+                    <Film className="w-16 h-16 text-gray-500" />
+                  </div>
+                )}
+              </div>
+              
+              <div className="md:col-span-2 space-y-4">
+                {selectedMovie.description && (
+                  <p className="text-gray-200 leading-relaxed">{selectedMovie.description}</p>
+                )}
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {selectedMovie.duration && (
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Durée</h4>
+                      <p className="text-gray-300">{formatDuration(selectedMovie.duration)}</p>
+                    </div>
+                  )}
+                  
+                  {selectedMovie.genres.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Genres</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedMovie.genres.map((genreId) => (
+                          <Badge key={genreId} variant="secondary" className="bg-violet-600/20 text-violet-300">
+                            {getGenreName(genreId)}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {selectedMovie.actors.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Acteurs</h4>
+                    <div className="space-y-2">
+                      {selectedMovie.actors.map((actorId) => {
+                        const actor = actors.find(a => a.id === actorId);
+                        return actor ? (
+                          <div key={actorId} className="flex items-center gap-3">
+                            {actor.image && (
+                              <img 
+                                src={actor.image} 
+                                alt={actor.name}
+                                className="w-10 h-10 rounded-full object-cover"
+                              />
+                            )}
+                            <span className="text-gray-200">{actor.name}</span>
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex gap-3 pt-4">
+                  {selectedMovie.url && (
+                    <Button 
+                      onClick={() => window.open(selectedMovie.url, '_blank')}
+                      className="bg-violet-600 hover:bg-violet-700"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Regarder
+                    </Button>
+                  )}
+                  
+                  <Button 
+                    variant="outline"
+                    onClick={() => toggleFavorite(selectedMovie.id, selectedMovie.is_favorite)}
+                    className="border-gray-500 text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    <Heart className={`w-4 h-4 mr-2 ${selectedMovie.is_favorite ? 'fill-current text-red-500' : ''}`} />
+                    {selectedMovie.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
