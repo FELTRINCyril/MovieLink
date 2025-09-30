@@ -278,7 +278,7 @@ const Actors = ({ isAdmin }) => {
                   <SelectValue placeholder="Tous les âges" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="">Tous les âges</SelectItem>
+                  <SelectItem value="all">Tous les âges</SelectItem>
                   <SelectItem value="young" className="text-white">Jeune (&lt; 30 ans)</SelectItem>
                   <SelectItem value="middle" className="text-white">Moyen (30-50 ans)</SelectItem>
                   <SelectItem value="mature" className="text-white">Mature (&gt; 50 ans)</SelectItem>
@@ -294,7 +294,7 @@ const Actors = ({ isAdmin }) => {
                   <SelectValue placeholder="Tous" />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="">Tous</SelectItem>
+                  <SelectItem value="all">Tous</SelectItem>
                   <SelectItem value="few" className="text-white">Peu (≤ 2 films)</SelectItem>
                   <SelectItem value="moderate" className="text-white">Modéré (3-5 films)</SelectItem>
                   <SelectItem value="many" className="text-white">Beaucoup (&gt; 5 films)</SelectItem>
