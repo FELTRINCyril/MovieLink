@@ -251,6 +251,34 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
                 <Users className="w-4 h-4" />
                 Acteurs
               </Link>
+
+              <Link 
+                to="/favorites" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-all ${
+                  isActive('/favorites') 
+                    ? 'bg-violet-600 text-white' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                }`}
+              >
+                <Heart className="w-4 h-4" />
+                Favoris
+              </Link>
+
+              {isAdmin && (
+                <Link 
+                  to="/genres" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-all ${
+                    isActive('/genres') 
+                      ? 'bg-violet-600 text-white' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                  }`}
+                >
+                  <Tag className="w-4 h-4" />
+                  Genres
+                </Link>
+              )}
               
               <Button
                 onClick={() => {
