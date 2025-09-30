@@ -16,6 +16,8 @@ const Favorites = ({ isAdmin }) => {
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [activeTab, setActiveTab] = useState('movies');
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedActor, setSelectedActor] = useState(null);
 
   useEffect(() => {
     loadFavorites();
