@@ -218,9 +218,9 @@ const Movies = ({ isAdmin }) => {
 
   const clearFilters = () => {
     setSearchQuery('');
-    setSelectedActor('');
-    setSelectedGenre('');
-    setSelectedDuration('');
+    setSelectedActor('all');
+    setSelectedGenre('all');
+    setSelectedDuration('all');
   };
 
   if (loading) {
