@@ -304,7 +304,7 @@ const Actors = ({ isAdmin }) => {
           </div>
           
           {/* Clear Filters */}
-          {(searchQuery || selectedAgeRange || selectedMovieCount) && (
+          {(searchQuery || selectedAgeRange !== 'all' || selectedMovieCount !== 'all') && (
             <div className="mt-4 flex justify-end">
               <Button
                 variant="outline"
