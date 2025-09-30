@@ -357,6 +357,174 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
           </div>
         )}
       </div>
+
+      {/* Movie Detail Modal */}
+      {selectedMovie && (
+        <Dialog open={!!selectedMovie} onOpenChange={() => setSelectedMovie(null)}>
+          <DialogContent className="max-w-4xl bg-gray-800 border-gray-600 max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-white">{selectedMovie.title}</DialogTitle>
+            </DialogHeader>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-1">
+                {selectedMovie.image ? (
+                  <img 
+                    src={selectedMovie.image} 
+                    alt={selectedMovie.title}
+                    className="w-full rounded-lg"
+                  />
+                ) : (
+                  <div className="w-full aspect-[2/3] bg-gray-700 flex items-center justify-center rounded-lg">
+                    <Film className="w-16 h-16 text-gray-500" />
+                  </div>
+                )}
+              </div>
+              
+              <div className="md:col-span-2 space-y-4">
+                {selectedMovie.description && (
+                  <p className="text-gray-200 leading-relaxed">{selectedMovie.description}</p>
+                )}
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {selectedMovie.duration && (
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Durée</h4>
+                      <p className="text-gray-300">{formatDuration(selectedMovie.duration)}</p>
+                    </div>
+                  )}
+                  
+                  {selectedMovie.genres && selectedMovie.genres.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Genres</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedMovie.genres.map((genreId, index) => (
+                          <Badge key={index} variant="secondary" className="bg-violet-600/20 text-violet-300">
+                            Genre {genreId}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {selectedMovie.actors && selectedMovie.actors.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Acteurs</h4>
+                    <div className="space-y-2">
+                      {selectedMovie.actors.map((actorId) => (
+                        <div key={actorId} className="flex items-center gap-3">
+                          <span className="text-gray-200">{getActorName(actorId)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex gap-3 pt-4">
+                  {selectedMovie.url && (
+                    <Button 
+                      onClick={() => window.open(selectedMovie.url, '_blank')}
+                      className="bg-violet-600 hover:bg-violet-700"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Regarder
+                    </Button>
+                  )}
+                  
+                  <Button 
+                    variant="outline"
+                    onClick={() => toggleFavorite(selectedMovie.id, selectedMovie.is_favorite, 'movie')}
+                    className="border-gray-500 text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    <Heart className={`w-4 h-4 mr-2 ${selectedMovie.is_favorite ? 'fill-current text-red-500' : ''}`} />
+                    {selectedMovie.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Actor Detail Modal */}
+      {selectedActor && (
+        <Dialog open={!!selectedActor} onOpenChange={() => setSelectedActor(null)}>
+          <DialogContent className="max-w-4xl bg-gray-800 border-gray-600 max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-white">{selectedActor.name}</DialogTitle>
+            </DialogHeader>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-1">
+                {selectedActor.image ? (
+                  <img 
+                    src={selectedActor.image} 
+                    alt={selectedActor.name}
+                    className="w-full rounded-lg"
+                  />
+                ) : (
+                  <div className="w-full aspect-[3/4] bg-gray-700 flex items-center justify-center rounded-lg">
+                    <Users className="w-16 h-16 text-gray-500" />
+                  </div>
+                )}
+              </div>
+              
+              <div className="md:col-span-2 space-y-4">
+                {selectedActor.description && (
+                  <p className="text-gray-200 leading-relaxed">{selectedActor.description}</p>
+                )}
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {selectedActor.age && (
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Âge</h4>
+                      <p className="text-gray-300">{selectedActor.age} ans</p>
+                    </div>
+                  )}
+                  
+                  {selectedActor.genres && selectedActor.genres.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Genres</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedActor.genres.map((genreId, index) => (
+                          <Badge key={index} variant="secondary" className="bg-violet-600/20 text-violet-300">
+                            Genre {genreId}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {selectedActor.movies && selectedActor.movies.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Filmographie</h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      {selectedActor.movies.map((movieId, index) => (
+                        <div key={index} className="flex items-center gap-3 p-2 bg-gray-700/30 rounded">
+                          <span className="text-gray-200 font-medium">Film {movieId}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex gap-3 pt-4">
+                  <Button 
+                    variant="outline"
+                    onClick={() => toggleFavorite(selectedActor.id, selectedActor.is_favorite, 'actor')}
+                    className="border-gray-500 text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    <Heart className={`w-4 h-4 mr-2 ${selectedActor.is_favorite ? 'fill-current text-red-500' : ''}`} />
+                    {selectedActor.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </header>
   );
 };
