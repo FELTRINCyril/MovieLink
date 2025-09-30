@@ -399,8 +399,7 @@ const Actors = ({ isAdmin }) => {
                             alt={actor.name}
                             className="w-full h-full object-cover transition-transform duration-300"
                             style={{
-                              transform: `scale(${settings.scale / 100})`,
-                              objectPosition: `${settings.positionX}% ${settings.positionY}%`
+                              transform: `scale(${settings.scale / 100}) translate(${(settings.positionX - 50) * 2}%, ${(settings.positionY - 50) * 2}%)`
                             }}
                             onLoad={(e) => {
                               e.target.style.display = 'block';
