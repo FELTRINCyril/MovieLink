@@ -30,17 +30,19 @@ const Home = ({ isAdmin }) => {
       setLoading(true);
       
       // Load all data in parallel
-      const [featuredRes, recentRes, favoritesRes, genresRes] = await Promise.all([
+      const [featuredRes, recentRes, favoritesRes, genresRes, actorsRes] = await Promise.all([
         axios.get(`${API}/movies/featured`),
         axios.get(`${API}/movies/recent?limit=8`),
         axios.get(`${API}/movies/favorites?limit=6`),
-        axios.get(`${API}/genres?type=movie`)
+        axios.get(`${API}/genres?type=movie`),
+        axios.get(`${API}/actors`)
       ]);
       
       setFeaturedMovie(featuredRes.data);
       setRecentMovies(recentRes.data);
       setFavoriteMovies(favoritesRes.data);
       setGenres(genresRes.data);
+      setActors(actorsRes.data);
       
       // Load movies by genre
       const moviesByGenreData = {};
