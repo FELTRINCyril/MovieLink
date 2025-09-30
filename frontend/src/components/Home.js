@@ -18,6 +18,8 @@ const Home = ({ isAdmin }) => {
   const [moviesByGenre, setMoviesByGenre] = useState({});
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [actors, setActors] = useState([]);
 
   useEffect(() => {
     loadHomeData();
