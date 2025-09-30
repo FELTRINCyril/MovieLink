@@ -421,7 +421,7 @@ const Movies = ({ isAdmin }) => {
                   onClick={() => setSelectedMovie(movie)}
                 >
                   <CardContent className="p-0">
-                    <div className="relative aspect-[2/3] overflow-hidden bg-gray-700">
+                    <div className="relative aspect-[16/9] overflow-hidden bg-gray-700">
                       {movie.image ? (
                         <>
                           <img 
