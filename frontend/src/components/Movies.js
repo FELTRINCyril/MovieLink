@@ -83,17 +83,17 @@ const Movies = ({ isAdmin }) => {
     }
 
     // Actor filter
-    if (selectedActor) {
+    if (selectedActor && selectedActor !== 'all') {
       filtered = filtered.filter(movie => movie.actors.includes(selectedActor));
     }
 
     // Genre filter
-    if (selectedGenre) {
+    if (selectedGenre && selectedGenre !== 'all') {
       filtered = filtered.filter(movie => movie.genres.includes(selectedGenre));
     }
 
     // Duration filter
-    if (selectedDuration) {
+    if (selectedDuration && selectedDuration !== 'all') {
       filtered = filtered.filter(movie => {
         const duration = movie.duration || 0;
         switch (selectedDuration) {
