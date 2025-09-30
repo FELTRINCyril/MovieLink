@@ -22,9 +22,9 @@ const Movies = ({ isAdmin }) => {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedActor, setSelectedActor] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState('');
+  const [selectedActor, setSelectedActor] = useState('all');
+  const [selectedGenre, setSelectedGenre] = useState('all');
+  const [selectedDuration, setSelectedDuration] = useState('all');
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingMovie, setEditingMovie] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
