@@ -289,6 +289,141 @@ const Favorites = ({ isAdmin }) => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Movie Detail Modal */}
+      <Dialog open={!!selectedMovie} onOpenChange={() => setSelectedMovie(null)}>
+        <DialogContent className="max-w-2xl bg-gray-800 border-gray-700">
+          <DialogHeader>
+            <DialogTitle className="text-white text-xl">
+              {selectedMovie?.title}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedMovie && (
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  {selectedMovie.image ? (
+                    <img 
+                      src={selectedMovie.image} 
+                      alt={selectedMovie.title}
+                      className="w-32 h-48 object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="w-32 h-48 bg-gray-700 flex items-center justify-center rounded-lg">
+                      <Film className="w-8 h-8 text-gray-500" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                    {selectedMovie.duration && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{formatDuration(selectedMovie.duration)}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>2024</span>
+                    </div>
+                  </div>
+                  {selectedMovie.description && (
+                    <p className="text-gray-300">{selectedMovie.description}</p>
+                  )}
+                  <div className="flex gap-2">
+                    {selectedMovie.url && (
+                      <Button 
+                        className="bg-violet-600 hover:bg-violet-700"
+                        onClick={() => window.open(selectedMovie.url, '_blank')}
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Regarder
+                      </Button>
+                    )}
+                    <Button 
+                      variant="outline"
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/20"
+                      onClick={() => {
+                        toggleMovieFavorite(selectedMovie.id, selectedMovie.is_favorite);
+                        setSelectedMovie(null);
+                      }}
+                    >
+                      <Heart className="w-4 h-4 mr-2 fill-current" />
+                      Retirer des favoris
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Actor Detail Modal */}
+      <Dialog open={!!selectedActor} onOpenChange={() => setSelectedActor(null)}>
+        <DialogContent className="max-w-2xl bg-gray-800 border-gray-700">
+          <DialogHeader>
+            <DialogTitle className="text-white text-xl">
+              {selectedActor?.name}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedActor && (
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  {selectedActor.image ? (
+                    <img 
+                      src={selectedActor.image} 
+                      alt={selectedActor.name}
+                      className="w-32 h-40 object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="w-32 h-40 bg-gray-700 flex items-center justify-center rounded-lg">
+                      <Users className="w-8 h-8 text-gray-500" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 space-y-3">
+                  {selectedActor.age && (
+                    <p className="text-gray-300">
+                      <span className="text-gray-400">Âge:</span> {selectedActor.age} ans
+                    </p>
+                  )}
+                  {selectedActor.biography && (
+                    <p className="text-gray-300">{selectedActor.biography}</p>
+                  )}
+                  <div className="space-y-2">
+                    <h4 className="text-white font-semibold">Filmographie</h4>
+                    <p className="text-gray-400">
+                      {selectedActor.movies?.length || 0} film{(selectedActor.movies?.length || 0) !== 1 ? 's' : ''}
+                    </p>
+                    {selectedActor.movies && selectedActor.movies.length > 0 && (
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {selectedActor.movies.slice(0, 6).map((movie, index) => (
+                          <div key={index} className="text-sm text-gray-300 bg-gray-700/50 p-2 rounded">
+                            {movie.title || movie}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <Button 
+                    variant="outline"
+                    className="border-red-500/30 text-red-400 hover:bg-red-500/20"
+                    onClick={() => {
+                      toggleActorFavorite(selectedActor.id, selectedActor.is_favorite);
+                      setSelectedActor(null);
+                    }}
+                  >
+                    <Heart className="w-4 h-4 mr-2 fill-current" />
+                    Retirer des favoris
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
