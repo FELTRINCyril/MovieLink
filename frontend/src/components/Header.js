@@ -143,6 +143,32 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
               Acteurs
             </Link>
 
+            <Link 
+              to="/favorites" 
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                isActive('/favorites') 
+                  ? 'bg-violet-600 text-white' 
+                  : 'text-gray-300 hover:text-white hover:bg-gray-800'
+              }`}
+            >
+              <Heart className="w-4 h-4" />
+              Favoris
+            </Link>
+
+            {isAdmin && (
+              <Link 
+                to="/genres" 
+                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                  isActive('/genres') 
+                    ? 'bg-violet-600 text-white' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                }`}
+              >
+                <Tag className="w-4 h-4" />
+                Genres
+              </Link>
+            )}
+
             {/* Admin Toggle */}
             <Button
               data-testid="admin-toggle-btn"
