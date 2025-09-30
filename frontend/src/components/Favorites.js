@@ -230,7 +230,7 @@ const Favorites = ({ isAdmin }) => {
                   <Card 
                     key={actor.id} 
                     className="actor-card card-hover bg-gray-800/50 border-gray-700 group cursor-pointer"
-                    onClick={() => setSelectedItem({...actor, type: 'actor'})}
+                    onClick={() => setSelectedActor(actor)}
                   >
                     <CardContent className="p-0">
                       <div className="relative aspect-[3/4]">
