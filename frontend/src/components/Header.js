@@ -158,7 +158,7 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
                           <img src={actor.image} alt={actor.name} className="w-8 h-8 object-cover rounded-full" />
                         )}
                         <span className="text-white text-sm">{actor.name}</span>
-                      </Link>
+                      </div>
                     ))}
                   </div>
                 )}
