@@ -410,7 +410,7 @@ const Actors = ({ isAdmin }) => {
                               e.target.nextSibling.style.display = 'flex';
                             }}
                           />
-                          <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <div className="w-full h-full bg-gray-700 hidden items-center justify-center">
                             <UsersIcon className="w-12 h-12 text-gray-500" />
                           </div>
                         </>
@@ -567,10 +567,11 @@ const Actors = ({ isAdmin }) => {
                           </div>
                         </div>
                       )}
-                    </div>
-                    
-                    <div className="p-3 bg-gray-800">
-                      <h3 className="font-semibold text-white text-sm line-clamp-1 leading-tight">{actor.name}</h3>
+                      
+                      {/* Actor Name Overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                        <h3 className="font-semibold text-white text-sm">{actor.name}</h3>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
