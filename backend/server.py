@@ -189,6 +189,16 @@ async def create_movie(movie: MovieCreate, current_user: User = Depends(get_curr
     movie_obj = Movie(**movie_dict)
     movie_data = prepare_for_mongo(movie_obj.dict())
     await db.movies.insert_one(movie_data)
+    
+    # Liaison bidirectionnelle avec les acteurs
+    for actor_id in movie_obj.actors:
+        actor = await db.actors.find_one({"id": actor_id})
+        if actor and movie_obj.id not in actor.get("movies", []):
+            await db.actors.update_one(
+                {"id": actor_id}, 
+                {"$addToSet": {"movies": movie_obj.id}}
+            )
+    
     return movie_obj
 
 @api_router.put("/movies/{movie_id}", response_model=Movie)
