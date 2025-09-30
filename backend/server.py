@@ -136,6 +136,10 @@ def prepare_for_mongo(data):
     return data
 
 # Auth endpoints
+@api_router.get("/")
+async def root():
+    return {"message": "MovieHub API is running"}
+
 @api_router.post("/auth/login", response_model=Token)
 async def login(user_data: UserLogin):
     user = await db.users.find_one({"username": user_data.username})
