@@ -20,6 +20,19 @@ const Header = ({ isAdmin, user, onToggleAdmin, onLogout }) => {
   const [actors, setActors] = useState([]);
   const location = useLocation();
 
+  useEffect(() => {
+    loadActors();
+  }, []);
+
+  const loadActors = async () => {
+    try {
+      const response = await axios.get(`${API}/actors`);
+      setActors(response.data);
+    } catch (error) {
+      console.error('Error loading actors:', error);
+    }
+  };
+
   const handleSearch = async (query) => {
     if (!query.trim()) {
       setSearchResults(null);
